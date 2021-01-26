@@ -1,10 +1,12 @@
-import React from 'react';
-
+import React from "react";
+import Panel from "./components/panel/Panel";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <Router>
+      <Panel />
+    </Router>
   );
 }
 
