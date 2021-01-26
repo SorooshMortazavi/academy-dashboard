@@ -70,7 +70,6 @@ import {
                   <Typography variant="inherit">لیست دانش آموزان</Typography>
                 </MenuItem>
               </Link>
-              <Divider />
             </List>
           </Collapse>
         </MenuList>
