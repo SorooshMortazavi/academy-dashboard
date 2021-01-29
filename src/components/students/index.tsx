@@ -1,10 +1,8 @@
 import React from 'react'
-import Content from '../partials/Content'
+import Students from './Students';
 
-export default function Students() {
+export default function index() {
     return (
-        <Content title='لیست دانشجو ها'>
-
-        </Content>
+        <Students/>
     )
 }
