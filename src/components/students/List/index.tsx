@@ -1,6 +1,5 @@
 import React from "react";
 import MUIDataTable from "mui-datatables";
-import { connect } from "http2";
 import ConfirmDialog from "../../partials/ConfirmDialog";
 
 interface Data {
