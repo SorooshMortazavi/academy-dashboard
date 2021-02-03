@@ -31,16 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   linkItem: {
-    textDecoration: 'none',
-    color: 'inherit'
+    textDecoration: "none",
+    color: "inherit",
   },
-  centerDownMd:{
-    [theme.breakpoints.down('md')]: {
-      justifyContent:'center'
-    }
-  }
+  centerDownMd: {
+    [theme.breakpoints.down("md")]: {
+      justifyContent: "center",
+    },
+  },
 }));
-export default function Courses(props:any) {
+export default function Courses(props: any) {
   const [open, setOpen] = React.useState<boolean>(true);
   const classes = useStyles();
 
@@ -50,7 +50,7 @@ export default function Courses(props:any) {
 
   return (
     <React.Fragment>
-      <MenuList >
+      <MenuList>
         <MenuItem className={classes.centerDownMd} onClick={handleCollapse}>
           <ListItemIcon>
             <Send fontSize="small" />
@@ -64,7 +64,7 @@ export default function Courses(props:any) {
         <Collapse in={open} timeout={500} unmountOnExit>
           <Divider />
           <List component="div" disablePadding>
-            <Link className={classes.linkItem} to='/courses'>
+            <Link className={classes.linkItem} to="/courses">
               <MenuItem className={classes.centerDownMd}>
                 <ListItemIcon className={classes.listItem}>
                   <AllInbox fontSize="small" />
@@ -73,12 +73,14 @@ export default function Courses(props:any) {
               </MenuItem>
             </Link>
             <Divider />
-            <MenuItem className={classes.centerDownMd}>
-              <ListItemIcon className={classes.listItem}>
-                <Add fontSize="small" />
-              </ListItemIcon>
-              <Typography variant="inherit">دوره جدید</Typography>
-            </MenuItem>
+            <Link className={classes.linkItem} to='createCourse'>
+              <MenuItem className={classes.centerDownMd}>
+                <ListItemIcon className={classes.listItem}>
+                  <Add fontSize="small" />
+                </ListItemIcon>
+                <Typography variant="inherit">دوره جدید</Typography>
+              </MenuItem>
+            </Link>
             <Divider />
             <MenuItem className={classes.centerDownMd}>
               <ListItemIcon className={classes.listItem}>

@@ -62,7 +62,7 @@ import {
           <Collapse in={open} timeout={500} unmountOnExit>
             <Divider />
             <List component="div" disablePadding>
-              <Link className={classes.linkItem} to='/courses'>
+              <Link className={classes.linkItem} to='/students'>
                 <MenuItem className={classes.centerDownMd}>
                   <ListItemIcon className={classes.listItem}>
                     <AllInbox fontSize="small" />

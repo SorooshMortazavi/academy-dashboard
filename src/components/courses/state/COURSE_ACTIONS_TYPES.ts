@@ -1,0 +1,8 @@
+const actionTypes = {
+    UPDATE_TITLE:"UPDATE_TITLE",
+    SET_ERROR:"SET_ERROR",
+    DELETE_ERROR:"DELETE_ERROR",
+    UPDATE_DESCRIPTION:"UPDATE_DESCRIPTION",
+}
+
+export default actionTypes
