@@ -10,12 +10,16 @@ import {
   Theme,
 } from "@material-ui/core";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { Save } from "@material-ui/icons";
+import { Add, Save } from "@material-ui/icons";
 import React from "react";
 import Content from "../../partials/Content";
+import SubContent from "../../partials/SubContent";
 import { useCourseContext } from "../context";
 import COURSE_ACTIONS from "../state/COURSE_ACTIONS_TYPES";
 import LEVEL_STATUS from "../state/levelStatus";
+import AddSectionDialog from "./AddSectionDialog";
+import SectionList from "./section";
+import Http from "../../../services/Http";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,9 +48,46 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function CreateCourse() {
   const classes = useStyles();
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const { state, dispatch } = useCourseContext();
+  const [categories, setCategories] = React.useState([]);
+  const [masters, setMasters] = React.useState([]);
+  const axiosHttp = React.useMemo(() => new Http(), []);
   console.log(state);
 
+  React.useEffect(() => {
+    function getCategories() {
+      axiosHttp
+        .get("api/v1/category")
+        .then((response: any) => {
+          setCategories(response.data.categories);
+        })
+        .catch((err) => {
+          //TODO: notify
+        });
+    }
+    function getMasters() {
+      axiosHttp
+        .get("api/v1/master/summary")
+        .then((response: any) => {
+          setMasters(response.data.masters);
+        })
+        .catch((error) => {
+          //TODO:notify
+        });
+    }
+    getCategories();
+    getMasters();
+  }, []);
+
+  function handleDeleteSection(slug: string) {
+    dispatch({
+      type:COURSE_ACTIONS.DELETE_SECTION,
+      payload:{
+        slug:slug
+      }
+    })
+  }
   function deleteError(errorName: string) {
     dispatch({
       type: COURSE_ACTIONS.DELETE_ERROR,
@@ -69,6 +110,18 @@ export default function CreateCourse() {
     }
   }
 
+  function handleCloseDialog(e: any) {
+    setOpenDialog(false);
+  }
+  function handleOkDialog(e: any, section: any) {
+    dispatch({
+      type: COURSE_ACTIONS.ADD_SECTION,
+      payload: {
+        section,
+      },
+    });
+    setOpenDialog(false);
+  }
   function handleDescriptionError(e: any) {
     if (e.target.value.length < 50) {
       dispatch({
@@ -132,16 +185,23 @@ export default function CreateCourse() {
               <Select
                 native
                 value={state.masterId}
-                // onChange={handleChange}
+                onChange={(e)=>{
+                  dispatch({
+                    type:COURSE_ACTIONS.SET_MASTER,
+                    payload:{
+                      masterId:e.target.value
+                    }
+                  })
+                }}
                 inputProps={{
                   name: "استاد",
                   id: "filled-age-native-simple",
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
+                {masters.map((master:any) => {
+                  return  <option value={master.id}>{`${master.name} ${master.lastName}`}</option>
+                })}
               </Select>
             </FormControl>
           </div>
@@ -152,17 +212,24 @@ export default function CreateCourse() {
               </InputLabel>
               <Select
                 native
-                value={state.masterId}
-                // onChange={handleChange}
+                value={state.categoryId}
+                onChange={(e)=>{
+                  dispatch({
+                    type:COURSE_ACTIONS.SET_CATEGORY,
+                    payload:{
+                      categoryId:e.target.value
+                    }
+                  })
+                }}
                 inputProps={{
                   name: "دسته بندی",
                   id: "filled-age-native-simple",
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
+                {categories.map((category:any) => {
+                  return  <option value={category.id}>{category.title}</option>
+                })}
               </Select>
             </FormControl>
           </div>
@@ -173,8 +240,15 @@ export default function CreateCourse() {
               </InputLabel>
               <Select
                 native
-                value={state.masterId}
-                // onChange={handleChange}
+                value={state.level}
+                onChange={(e) => {
+                  dispatch({
+                    type: COURSE_ACTIONS.SET_LEVEL,
+                    payload: {
+                      level: e.target.value,
+                    },
+                  });
+                }}
                 inputProps={{
                   name: "level",
                   id: "filled-age-native-simple",
@@ -193,8 +267,17 @@ export default function CreateCourse() {
         <FormControlLabel
           control={
             <Checkbox
-              checked={true}
-              onChange={() => {}}
+              checked={state.isFree}
+              // value={state.isFree}
+              onChange={(e) => {
+                console.log(e)
+                dispatch({
+                  type:COURSE_ACTIONS.SET_IS_FREE,
+                  payload:{
+                    isFree:e.target.checked
+                  }
+                })
+              }}
               name="isFree"
               color="primary"
             />
@@ -202,6 +285,27 @@ export default function CreateCourse() {
           label="این دوره رایگان است"
         />
       </div>
+      <SubContent title=" اضافه کردن سر فصل های دوره">
+        <Button
+          variant="contained"
+          color="secondary"
+          size="medium"
+          onClick={(e) => setOpenDialog(true)}
+          startIcon={<Add />}
+        >
+          اضافه کردن سر فصل
+        </Button>
+
+        <AddSectionDialog
+          open={openDialog}
+          handleClose={handleCloseDialog}
+          handleOk={handleOkDialog}
+        />
+        <SectionList
+          sections={state.sections}
+          handleDelete={handleDeleteSection}
+        />
+      </SubContent>
       <div className="d-flex justify-content-end">
         <Button
           variant="contained"
