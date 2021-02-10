@@ -36,7 +36,7 @@ class Http {
   public patch<T, R = AxiosResponse<T>>(
     url: string,
     data: any,
-    config?: object
+    config?: object     
   ): Promise<R> {
     return this.axiosInstance.patch(`${this.baseUrl}/${url}`, data, config);
   }

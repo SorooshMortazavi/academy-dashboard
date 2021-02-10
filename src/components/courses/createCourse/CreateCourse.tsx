@@ -53,7 +53,8 @@ export default function CreateCourse() {
   const [categories, setCategories] = React.useState([]);
   const [masters, setMasters] = React.useState([]);
   const axiosHttp = React.useMemo(() => new Http(), []);
-  console.log(state);
+  const [isSubmitDisable, setIsSubmitDisable] = React.useState(true)
+  // console.log(state);
 
   React.useEffect(() => {
     function getCategories() {
@@ -79,6 +80,20 @@ export default function CreateCourse() {
     getCategories();
     getMasters();
   }, []);
+
+  function sendData(){
+    let newState:any = state
+    delete newState?.formError
+    axiosHttp.post('api/v1/course/create',{
+      data:JSON.stringify(newState)
+    })
+    .then(response => {
+      console.log('sending was ok')
+    })
+    .catch(error => {
+      console.log('sending failed')
+    })
+  }
 
   function handleDeleteSection(slug: string) {
     dispatch({
@@ -134,9 +149,21 @@ export default function CreateCourse() {
       deleteError("description");
     }
   }
+  function handleSubmitButtonDisable(){
+   if(openDialog == false){
+    if(state.categoryId && state.masterId && 
+      state.description && !state.formError.size && state.level >= 0 && state.title && isSubmitDisable === true){
+        setIsSubmitDisable(false)
+      }else if(!(state.categoryId && state.masterId && 
+        state.description && !state.formError.size && state.level >= 0 && state.title) && isSubmitDisable === false ){
+          setIsSubmitDisable(true)
+      }
+   }
+  }
 
   return (
     <Content title="ایجاد دوره جدید">
+      {handleSubmitButtonDisable()}
       <FormControl fullWidth className={classes.margin} variant="outlined">
         <TextField
           variant="filled"
@@ -183,6 +210,7 @@ export default function CreateCourse() {
             <FormControl variant="filled" className={classes.selectForm}>
               <InputLabel htmlFor="filled-age-native-simple">استاد</InputLabel>
               <Select
+                required={true}
                 native
                 value={state.masterId}
                 onChange={(e)=>{
@@ -310,7 +338,9 @@ export default function CreateCourse() {
         <Button
           variant="contained"
           color="primary"
+          disabled={isSubmitDisable}
           size="large"
+          onClick={() => sendData()}
           className={`${classes.button} flex justify-self-end`}
           startIcon={<Save />}
         >

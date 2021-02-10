@@ -82,6 +82,15 @@ export default function Courses(props: any) {
               </MenuItem>
             </Link>
             <Divider />
+            <Link className={classes.linkItem} to='/addVideo'>
+              <MenuItem className={classes.centerDownMd}>
+                <ListItemIcon className={classes.listItem}>
+                  <Add fontSize="small" />
+                </ListItemIcon>
+                <Typography variant="inherit">اضافه کردن ویدیو</Typography>
+              </MenuItem>
+            </Link>
+            <Divider />
             <MenuItem className={classes.centerDownMd}>
               <ListItemIcon className={classes.listItem}>
                 <Category fontSize="small" />

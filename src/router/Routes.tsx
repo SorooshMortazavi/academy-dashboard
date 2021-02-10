@@ -3,6 +3,7 @@ import {Switch,Route,Redirect} from 'react-router-dom';
 import Courses from '../components/courses/Courses';
 import CreateCourse from "../components/courses/createCourse";
 import Students from '../components/students';
+import AddVideo from '../components/video/addVideo';
 
 interface IRoute{
     path:string
@@ -11,7 +12,8 @@ interface IRoute{
 const routes:IRoute[] = [
     { path:'/courses', component:Courses },
     { path:'/students', component:Students },
-    {path:'/createCourse',component:CreateCourse}
+    {path:'/createCourse',component:CreateCourse},
+    {path:'/addVideo',component:AddVideo}
 ]
 
  function Routes() {
